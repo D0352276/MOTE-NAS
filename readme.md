@@ -1,4 +1,4 @@
-# CSL-YOLO: A Cross-Stage Lightweight Object Detector with Low FLOPs
+# MOTE-NAS: Multi-Objective Training-based Estimate for Efficient Neural Architecture Search
 
 ![](https://img.shields.io/badge/Python-3-blue)
 ![](https://img.shields.io/badge/TensorFlow-2-orange)
@@ -13,7 +13,7 @@ This project provides a few-cost estimate for Neural Architecture Search.
 3. Files "meta_models.py", "reduced_data.py" respectively correspond to the core methods mentioned in the paper - Reduced Architecture and Reduced Data.
 
 
-The paper has been accepted by NeurIPS 2024.
+The paper has been accepted by **NeurIPS 2024.**
 
 Paper Link: https://reurl.cc/KdMalq
 
