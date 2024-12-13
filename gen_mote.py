@@ -172,7 +172,6 @@ def Cell2Terms(cell):
         landscape_term+=1/(landscape_loss)
 
     speed_term=train_time/(sum(losses)/len(losses))
-    # speed_term=train_time/(sum(landscape_losses)/len(landscape_losses))
 
     cell["landscape_term"]=landscape_term
     cell["speed_term"]=speed_term

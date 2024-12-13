@@ -7,10 +7,9 @@
 This project provides a few-cost estimate for Neural Architecture Search. 
 
 1. This code covers the core function of the proposed MOTE.
-
-2. File "example.py" and "gen_mote.py" is the main program, which records the code for MOTE generation.
-
-3. Files "meta_models.py", "reduced_data.py" respectively correspond to the core methods mentioned in the paper - Reduced Architecture and Reduced Data.
+2. File **"example.py"** and **"gen_mote.py"** is the main program, which records the code for MOTE generation.
+3. Files **"meta_models.py"**, **"reduced_data.py"** respectively correspond to the core methods mentioned in the paper -
+   Reduced Architecture(RA) and Reduced Data(RD).
 
 
 The paper has been accepted by **NeurIPS 2024.**
@@ -29,82 +28,44 @@ Paper Link: https://reurl.cc/KdMalq
 - [Numpy](http://www.numpy.org/)
 
 
-## How to Get Started?
-```bash
-#Predict
-python3 main.py -p cfg/predict_coco.cfg
-
-#Train
-python3 main.py -t cfg/train_coco.cfg
-
-#Eval
-python3 main.py -ce cfg/eval_coco.cfg
+## How to Get MOTE for an Architecture(cell_pth) ?
+```python
+from nas_prcss import CellPth2Cell
+from gen_mote import GetProxyC100TrainData, CellPth2MOTE
+train_x,train_y=GetProxyC100TrainData(labels_len=10)
+CellPth2MOTE(train_x,train_y,cell_pth,cell_type="nas201",proxy_labels_len=10)
+cell_dict=CellPth2Cell(cell_pth)
+print(cell_dict["mote"])
 ```
-
-
-## More Info
-
-### Change Model Scale
-The model's default scale is 224x224, if you want to change the scale to 320~512, 
-
-please go to cfg/XXXX.cfg and change the following two parts:
-```bash
-# input_shape=[512,512,3]
-# out_hw_list=[[64,64],[48,48],[32,32],[24,24],[16,16]]
-# input_shape=[416,416,3]
-# out_hw_list=[[52,52],[39,39],[26,26],[20,20],[13,13]]
-# input_shape=[320,320,3]
-# out_hw_list=[[40,40],[30,30],[20,20],[15,15],[10,10]]
-input_shape=[224,224,3]
-out_hw_list=[[28,28],[21,21],[14,14],[10,10],[7,7]]
-
-weight_path=weights/224_nolog.hdf5
-
-                         |
-                         | 224 to 320
-                         V
-                         
-# input_shape=[512,512,3]
-# out_hw_list=[[64,64],[48,48],[32,32],[24,24],[16,16]]
-# input_shape=[416,416,3]
-# out_hw_list=[[52,52],[39,39],[26,26],[20,20],[13,13]]
-input_shape=[320,320,3]
-out_hw_list=[[40,40],[30,30],[20,20],[15,15],[10,10]]
-# input_shape=[224,224,3]
-# out_hw_list=[[28,28],[21,21],[14,14],[10,10],[7,7]]
-
-weight_path=weights/320_nolog.hdf5
+## How to Get Correlation of MOTE Ranking and Actual Ranking ?
+```python
+from nas_prcss import SamplingCellPths,FilteringByDirtyBit
+from eval_cell import CellPths2Psp
+cells_dir="data/nasbench201_img16-10"
+gt_key="test_accuracy_200"
+cell_pths=SamplingCellPths(cells_dir,shuffle=True)
+psp=CellPths2Psp(cell_pths,gt_key,"mote")
+print(psp)
 ```
-
 
 ### Fully Dataset
-The entire MS-COCO data set is too large, here only a few pictures are stored for DEMO, 
-
-if you need complete data, please download on this [page.](https://cocodataset.org/#download)
+The NASBench-101 data set is too large, here only the NASBench-201, 
+we will provide NB101 ASAP.
 
 
 ### Our Data Format
-We did not use the official format of MS-COCO, we expressed a bounding box as following:
-```bash
-[ left_top_x<float>, left_top_y<float>, w<float>, h<float>, confidence<float>, class<str> ]
-```
-The bounding boxes contained in a picture are represented by single json file.
-
-For detailed format, please refer to the json file in "data/coco/train/json".
+coming soon.
 
 
-### AP Performance on MS-COCO
+### The Comparison of Search Efficiency on NASBench-201
 
-For detailed COCO report, please refer to "mscoco_result".
+For detailed report, please refer to our paper.
 
-<img src=https://github.com/D0352276/CSL-YOLO/blob/main/demo/result_table.png width=100% />
+<img src=https://github.com/D0352276/MOTE-NAS/blob/main/overview/cmptable.png width=100% />
 
 
 ## TODOs
 
-- Improve the calculator script of FLOPs.
-- Using Focal Loss will cause overfitting, we need to explore the reasons.
-
-
-
+- Provide NB101.
+- Provide more complete code.
 
